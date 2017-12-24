@@ -1,0 +1,35 @@
+<% include ./partials/header %>
+
+<div class="ui container blogBody loginForm">
+	<h1 style="text-align:center ;font-size:3em"> Login Form </h1>
+	<div class="ui raised segment">
+		<div style="margin:2%">
+		<form class="ui form"  action="/login" method="POST">
+			<div class="field">
+				<label>Username</label>
+				<div class="ui right icon input">
+					<i class="user icon"></i>
+					<input type ="text" name="username" placeholder="Username">
+				</div>
+			</div>
+			<div class="field">
+				<label>Password</label>
+				<div class="ui right icon input">
+					<i class="lock icon"></i>
+					<input type ="password" name="password" placeholder="Password">
+				</div>
+			</div>
+			<button class="ui button green" type="submit">Submit</button>
+		</form>
+		<br>
+		<div class="ui container">
+			<div class="ui message">
+		  	<div class="header" style="text-align:center;">
+		    	New To Us? <a href="/register">SignUp</a>
+		  	</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<% include ./partials/footer %>

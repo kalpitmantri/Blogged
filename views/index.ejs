@@ -1,0 +1,33 @@
+<% include ./partials/header %> 
+
+<div class="ui blogBody container" style="display:flex;flex-wrap:wrap;">
+	<div class="ui stackable four column grid">
+	<% blogs.forEach(function(blog){ %>
+	  <div class="column">
+	  		<div class="ui link cards">
+				  <div class="card">
+				    <div class="image">
+				      <img src="<%= blog.image %>" >
+				    </div>
+				    <div class="content">
+				      <div class="header"><%= blog.title %></div>
+				      <div class="meta">
+				        <span class="date"><%= blog.created.toDateString() %></span>
+				      </div>
+				      <div class="description">
+				        <%- blog.body.substring(0,100) %>...<a href="/blogs/<%= blog._id %>"> Read More</a>
+				      </div>
+				    </div>
+				    <div class="extra content">
+				      <span class="left floated">
+				        <a href="/secret/<%= blog.author.id %>"><em> By-<%= blog.author.username %> </em></a>
+				      </span>
+				    </div>
+				  </div>
+			</div>
+	  </div>
+	<% }); %>
+	</div>
+</div>
+
+<% include ./partials/footer %>
