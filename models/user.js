@@ -9,7 +9,18 @@ var userSchema = new mongoose.Schema({
 			type:mongoose.Schema.Types.ObjectId,
 			ref:"Blog"
 		}
-	]
+	],
+	google:{
+		gid:String,
+		gender:String,
+		token:String,
+		gname:String
+	},
+	facebook:{
+		fbid:String,
+		token:String,
+		fbname:String
+	}
 });
 
 userSchema.plugin(passportLocalMongoose);

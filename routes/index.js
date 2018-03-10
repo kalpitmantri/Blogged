@@ -60,6 +60,47 @@ router.get("/logout",function(req,res){
 	res.redirect("/blogs");
 });
 
+//Auth with Google
+router.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile']
+}));
+// callback route for google to redirect to
+router.get('/auth/google/redirect',passport.authenticate('google'),(req, res) => {
+    //res.redirect('/profile');
+    res.redirect("/secret/"+req.user._id);
+});  
+
+//Auth with Facebook
+router.get('/auth/facebook',passport.authenticate('facebook',{
+	scope:['email']
+}));
+router.get('/auth/facebook/callback',passport.authenticate('facebook'),(req,res)=>{
+	res.redirect("/secret/"+req.user._id)
+});
+
+//Unlinking
+router.get('/unlink/facebook',function(req,res){
+	var user = req.user;
+	user.facebook.token = null;
+	user.save(function(err){
+		if(err)
+			throw err;
+		else
+			res.redirect("/secret/"+req.user._id);
+	});
+});
+
+router.get('/unlink/google',function(req,res){
+	var user = req.user;
+	user.google.token = null;
+	user.save(function(err){
+		if(err)
+			throw err;
+		else
+			res.redirect("/secret/"+req.user._id);
+	})
+});
+
 function isLoggedIn(req,res,next){
 	if(req.isAuthenticated())
 	{
