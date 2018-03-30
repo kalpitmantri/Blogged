@@ -20,7 +20,8 @@ var userSchema = new mongoose.Schema({
 		fbid:String,
 		token:String,
 		fbname:String
-	}
+	},
+	image:String
 });
 
 userSchema.plugin(passportLocalMongoose);

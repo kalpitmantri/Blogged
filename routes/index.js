@@ -6,6 +6,35 @@ var comment = require("../models/comment.js");
 var User = require("../models/user.js");
 var passport = require("passport");
 
+//FileUpload
+router.post("/upload",function(req,res){
+	console.log("Inside post");
+	if(req.files){
+		var file = req.files.filename,
+			filename = file.name;
+			file.mv("./upload/"+filename,function(err){
+				if(err){
+					console.log(err);
+					res.send("Error Occured!!");
+				}
+				else{
+					var user = req.user;
+					user.image = filename;
+					user.save(function(err){
+		                if(err){
+		                    throw err;
+		                }
+		                else{
+		                    console.log("Uploaded Successfully");
+		                    res.redirect("/secret/" + req.user._id);
+		                }
+		            });
+					
+				}
+			});
+	}
+})
+
 router.get("/",function(req,res){
 	res.redirect("/blogs");
 });

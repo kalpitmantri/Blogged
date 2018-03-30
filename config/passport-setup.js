@@ -87,7 +87,7 @@ passport.use(
         callbackURL: 'http://localhost:3000/auth/facebook/callback',
         passReqToCallback:true
     },(req,accessToken,refreshToken,profile,done)=>{
-        //console.log(profile);
+        console.log(profile);
         if(!req.user){
             User.findOne({'facebook.fbid':profile.id}).then((currentUser)=>{
                 console.log(currentUser);

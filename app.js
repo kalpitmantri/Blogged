@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-
+var upload = require("express-fileupload");
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
@@ -17,6 +17,7 @@ var cookieSession = require('cookie-session');
 var passport = require('passport');
 var passportSetup = require('./config/passport-setup.js');
 
+app.use(upload());
 app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: false,
