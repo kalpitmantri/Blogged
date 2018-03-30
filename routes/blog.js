@@ -6,15 +6,31 @@ var comment = require("../models/comment.js");
 var User = require("../models/user.js");
 
 router.get("/blogs",function(req,res){
-	// console.log(req.user);
-	Blog.find({},function(err,blogs){
-		if(err){
-			console.log("Err While Finding!!!");
-		}
-		else{
-			res.render("index",{blogs:blogs});
-		}
-	});
+	var noMatch;
+	if(req.query.search){
+		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+		Blog.find({title:regex},function(err,blogs){
+			if(err){
+				console.log("Err While Finding!!!");
+			}
+			else{
+				if(blogs.length<1){
+					noMatch = "No Blog Matched, Try Again!!";
+				}
+				res.render("index",{blogs:blogs,noMatch:noMatch});
+			}
+		});
+	}
+	else{
+		Blog.find({},function(err,blogs){
+			if(err){
+				console.log("Err While Finding!!!");
+			}
+			else{
+				res.render("index",{blogs:blogs,noMatch:noMatch});
+			}
+		});
+	}
 });
 
 router.get("/blogs/new",isLoggedIn,function(req,res){
@@ -126,6 +142,10 @@ function blogAuthorCheck(req,res,next){
 		res.redirect("back");
 	}
 }
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;
 

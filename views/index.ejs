@@ -1,6 +1,10 @@
-<% include ./partials/header %> 
-
+<% include ./partials/header %>   
 <div class="ui blogBody container" style="display:flex;flex-wrap:wrap;">
+	<div>
+		<% if(noMatch !== undefined){ %>
+			<h3> <%= noMatch %> </h3> 
+		<% } %>
+	</div>
 	<div class="ui stackable four column grid">
 	<% blogs.forEach(function(blog){ %>
 	  <div class="column">

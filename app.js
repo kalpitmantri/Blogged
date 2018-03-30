@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var upload = require("express-fileupload");
+
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
@@ -17,7 +17,6 @@ var cookieSession = require('cookie-session');
 var passport = require('passport');
 var passportSetup = require('./config/passport-setup.js');
 
-app.use(upload());
 app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: false,
@@ -41,7 +40,7 @@ var commentRoute    = require("./routes/comment"),
 	indexRoute      = require("./routes/index");
 	//authRoutes      = require("./routes/auth");
 
-mongoose.connect("mongodb://localhost/blog_app",{
+mongoose.connect("mongodb://localhost/blog_app_reset",{
 	useMongoClient:true
 });
 
@@ -50,7 +49,7 @@ app.use(blogRoute);
 app.use(indexRoute);
 //app.use(authRoutes);
 
-// seedDB();
+ seedDB();
 
 app.listen(3000,function(){
 	console.log("Server is Listening");

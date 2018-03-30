@@ -31,6 +31,14 @@
 				  <a class="header right item" href="/secret/<%= currentUser.id %>">
 				  	<i class="user circle icon"></i><%= currentUser.username %>
 				  </a>
-			   <%}%>	  
+			   <%}%>
+			   <form method="GET" action="/blogs">
+				   <div class="item">
+	   	 				<div class="ui icon input">
+	      					<input name="search" placeholder="Search..." type="text">
+	      					&nbsp<input type="submit" value="Search" class="ui button">
+	    				</div>
+	  				</div>	
+  				<form>  
 			</div> 
 		</div>

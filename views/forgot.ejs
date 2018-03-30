@@ -1,0 +1,31 @@
+<% include ./partials/header %>
+	
+	<form class="ui form">
+		<div class="field">
+		    <label>Email</label>
+		    <input name="email" placeholder="Email" type="email">
+		</div>
+  	</form>
+  	<div class="ui container blogBody loginForm">
+		<h1 style="text-align:center ;font-size:3em"> Password-Reset </h1>
+		<div class="ui raised segment">
+		<div style="margin:2%">
+		<form class="ui form"  action="/forgot" method="POST">
+			<div class="field">
+				<label>Email</label>
+				<div class="ui right icon input">
+					<input type ="email" name="email" placeholder="Email">
+				</div>
+			</div>
+			<button class="ui button green" type="submit">Reset Password</button>
+		</form>
+		<br>
+		<div class="ui container">
+			<div class="ui message">
+		  	<div class="header" style="text-align:center;">
+		    	Back To <a href="/login">Login</a>
+		  	</div>
+		</div>
+	</div>
+</div>
+<% include ./partials/footer %>

@@ -4,6 +4,7 @@ var passportLocalMongoose = require("passport-local-mongoose");
 var userSchema = new mongoose.Schema({
 	username:String,
 	password:String,
+	email:String,
 	blogs:[
 		{
 			type:mongoose.Schema.Types.ObjectId,
@@ -21,7 +22,8 @@ var userSchema = new mongoose.Schema({
 		token:String,
 		fbname:String
 	},
-	image:String
+	resetPasswordToken:String,
+	resetPasswordExpires:Date
 });
 
 userSchema.plugin(passportLocalMongoose);
