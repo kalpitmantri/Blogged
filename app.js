@@ -40,7 +40,7 @@ var commentRoute    = require("./routes/comment"),
 	indexRoute      = require("./routes/index");
 	//authRoutes      = require("./routes/auth");
 
-mongoose.connect("mongodb://localhost/blog_app_reset",{
+mongoose.connect("mongodb://localhost/blog_app_image",{
 	useMongoClient:true
 });
 

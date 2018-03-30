@@ -10,57 +10,97 @@ var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
 
+var multer = require('multer');
+var storage = multer.diskStorage({
+  //destination: "./public/uploads/",
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var imageFilter = function (req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+
+var upload = multer({ storage: storage, fileFilter: imageFilter}).single('avatar');
+
+var cloudinary = require('cloudinary');
+cloudinary.config({ 
+  cloud_name: 'blogapp', 
+  api_key: "273835516761459", 
+  api_secret: "2WqxZxEe17EH1LE8SFulkPCHxJc"
+});
+
+router.post("/load",isLoggedIn,upload,function(req, res){
+  cloudinary.uploader.upload(req.file.path, function(result) {
+    var user = req.user;
+    user.image = result.secure_url;
+    user.save(function(err){
+        if(err){
+          throw err;
+        }
+        else{
+          console.log("Uploaded Successfully");
+          res.redirect("/secret/" + req.user._id);
+        }
+    });    
+  });
+});
+
 router.get("/",function(req,res){
-	res.redirect("/blogs");
+  res.redirect("/blogs");
 });
 
 router.get("/register",function(req,res){
-	res.render("register");
+  res.render("register");
 });
 
 router.post("/register",function(req,res){
 
-	var newUser = new User({username:req.body.username,email:req.body.email});
-	User.register(newUser,req.body.password,function(err,user){
-		if(err){
-			console.log(err);
-			return res.render("register");
-		}
+  var newUser = new User({username:req.body.username,email:req.body.email});
+  User.register(newUser,req.body.password,function(err,user){
+    if(err){
+      console.log(err);
+      return res.render("register");
+    }
 
-		passport.authenticate("local")(req,res,function(){
-			res.redirect("/blogs");
-		});
-	});
+    passport.authenticate("local")(req,res,function(){
+      res.redirect("/blogs");
+    });
+  });
 });
 
 router.get("/loggedUser",function(req,res){
-	res.redirect("/secret/"+req.user._id)
+  res.redirect("/secret/"+req.user._id)
 });
 
 router.get("/secret/:user_id",isLoggedIn,function(req,res){
-	User.findById(req.params.user_id).populate("blogs").exec(function(err,user){
-		if(err){
-			console.log(err);
-			res.redirect("/blogs");
-		}else{
-			res.render("secret",{user:user});
-		}
-	});
+  User.findById(req.params.user_id).populate("blogs").exec(function(err,user){
+    if(err){
+      console.log(err);
+      res.redirect("/blogs");
+    }else{
+      res.render("secret",{user:user});
+    }
+  });
 });
 
 router.get("/login",function(req,res){
-	res.render("login");
+  res.render("login");
 });
 
 router.post("/login",passport.authenticate("local",{
-	successRedirect:"/loggedUser",
-	failureRedirect:"/register"
+  successRedirect:"/loggedUser",
+  failureRedirect:"/register"
 }),function(req,res){
-	console.log("Logged in");
+  console.log("Logged in");
 });
 
 router.get("/forgot",function(req,res){
-	res .render("forgot");
+  res .render("forgot");
 });
 
 
@@ -179,8 +219,8 @@ router.post('/reset/:token', function(req, res) {
 });
 
 router.get("/logout",function(req,res){
-	req.logout();
-	res.redirect("/blogs");
+  req.logout();
+  res.redirect("/blogs");
 });
 
 //Auth with Google
@@ -195,42 +235,42 @@ router.get('/auth/google/redirect',passport.authenticate('google'),(req, res) =>
 
 //Auth with Facebook
 router.get('/auth/facebook',passport.authenticate('facebook',{
-	scope:['email']
+  scope:['email']
 }));
 router.get('/auth/facebook/callback',passport.authenticate('facebook'),(req,res)=>{
-	res.redirect("/secret/"+req.user._id)
+  res.redirect("/secret/"+req.user._id)
 });
 
 //Unlinking
 router.get('/unlink/facebook',function(req,res){
-	var user = req.user;
-	user.facebook.token = null;
-	user.save(function(err){
-		if(err)
-			throw err;
-		else
-			res.redirect("/secret/"+req.user._id);
-	});
+  var user = req.user;
+  user.facebook.token = null;
+  user.save(function(err){
+    if(err)
+      throw err;
+    else
+      res.redirect("/secret/"+req.user._id);
+  });
 });
 
 router.get('/unlink/google',function(req,res){
-	var user = req.user;
-	user.google.token = null;
-	user.save(function(err){
-		if(err)
-			throw err;
-		else
-			res.redirect("/secret/"+req.user._id);
-	})
+  var user = req.user;
+  user.google.token = null;
+  user.save(function(err){
+    if(err)
+      throw err;
+    else
+      res.redirect("/secret/"+req.user._id);
+  })
 });
 
 function isLoggedIn(req,res,next){
-	if(req.isAuthenticated())
-	{
-		return next();
-	}	
+  if(req.isAuthenticated())
+  {
+    return next();
+  } 
 
-	res.redirect("/login");
+  res.redirect("/login");
 }
 
 module.exports = router;
